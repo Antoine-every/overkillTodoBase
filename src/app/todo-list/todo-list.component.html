@@ -1,18 +1,31 @@
 <div id="container">
   <mat-card>
-    <mat-card-title>Todos</mat-card-title>
+    <mat-card-title *ngIf="((closeTodo$ | async)?.length) !== ((todos$ | async)?.length)">Open Todos</mat-card-title>
     <mat-card-content>
       <mat-list>
-        <mat-list-item *ngFor="let todo of todos$ | async">
-          <h4 matLine>
-            <mat-checkbox
-              [checked]="todo.isClosed"
-              disabled="true"
-            ></mat-checkbox>
-            {{ todo.title }}
-          </h4>
-        </mat-list-item>
+        <ng-container *ngFor="let todo of todos$ | async">
+          <mat-list-item *ngIf="!todo.isClosed">
+            <mat-checkbox [checked]="todo.isClosed" (change)="setTodo($event.checked, todo.title)">
+              {{ todo.title }}
+            </mat-checkbox>
+          </mat-list-item>
+        </ng-container>
+      </mat-list>
+      <mat-divider inse *ngIf="(closeTodo$ | async)?.length"></mat-divider>
+    </mat-card-content>
+
+    <mat-card-content>
+    <mat-card-title class="ml-2" *ngIf="(closeTodo$ | async)?.length">Todos closed</mat-card-title>
+      <mat-list>
+        <ng-container *ngFor="let todo of todos$ | async">
+          <mat-list-item *ngIf="todo.isClosed">
+            <mat-checkbox [checked]="todo.isClosed" (change)="setTodo($event.checked, todo.title)" class="crossed">
+              {{ todo.title }}
+            </mat-checkbox>
+          </mat-list-item>
+        </ng-container>
       </mat-list>
     </mat-card-content>
+
   </mat-card>
 </div>

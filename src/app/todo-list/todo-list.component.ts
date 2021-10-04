@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
-import {Todo} from '../models/todo';
-import {Store} from '@ngrx/store';
-import {selectTodos} from '../store/selectors';
-import {loadTodos} from '../store/actions';
+import { filteredClosedTodos, selectTodos } from './../store/selectors';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Todo } from '../models/todo';
+import { Store } from '@ngrx/store';
+import { loadTodos, toggleTodoState } from '../store/actions';
 
 @Component({
   selector: 'app-todo-list',
@@ -13,13 +13,18 @@ import {loadTodos} from '../store/actions';
 export class TodoListComponent implements OnInit {
 
   todos$: Observable<ReadonlyArray<Todo>>;
+  closeTodo$: Observable<ReadonlyArray<Todo>>;
 
   constructor(private store: Store) {
     this.todos$ = this.store.select(selectTodos);
+    this.closeTodo$ = this.store.select(filteredClosedTodos);
   }
 
   ngOnInit(): void {
-     this.store.dispatch(loadTodos());
+    this.store.dispatch(loadTodos());
   }
 
+  setTodo(isClosed: boolean, todoId: string): void {
+    this.store.dispatch(toggleTodoState({ isClosed, todoId }));
+  }
 }
