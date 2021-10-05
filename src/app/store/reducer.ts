@@ -21,15 +21,15 @@ export const todosReducer = createReducer(
       todos
     })
   ),
-  on(toggleTodoState, (state, { isClosed, todoId }) => ({
+  on(toggleTodoState, (state, { isClosed, todoTitle }) => ({
     ...state,
-    todos: toggleTodo(isClosed, todoId, state.todos)
+    todos: toggleTodo(isClosed, todoTitle, state.todos)
   })),
 );
 
-function toggleTodo(isClosed: boolean, todoId: string, todos: Array<Todo>): Array<Todo> {
+function toggleTodo(isClosed: boolean, todoTitle: string, todos: Array<Todo>): Array<Todo> {
   return todos.map(todo => {
-    if (todo.title === todoId) {
+    if (todo.title === todoTitle) {
       return {
         ...todo,
         isClosed

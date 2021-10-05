@@ -24,7 +24,7 @@ export class TodoListComponent implements OnInit {
     this.store.dispatch(loadTodos());
   }
 
-  setTodo(isClosed: boolean, todoId: string): void {
-    this.store.dispatch(toggleTodoState({ isClosed, todoId }));
+  toggleTodo(isClosed: boolean, todoTitle: string): void {
+    this.store.dispatch(toggleTodoState({ isClosed, todoTitle }));
   }
 }

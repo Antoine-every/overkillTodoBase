@@ -10,4 +10,4 @@ export const loadTodosSuccess = createAction(
 
 export const loadTodosFailed = createAction('[Todos] Load todos failed');
 
-export const toggleTodoState = createAction('[Todos] Update todos state', props<{ isClosed: boolean, todoId: string }>());
+export const toggleTodoState = createAction('[Todos] Update todos state', props<{ isClosed: boolean, todoTitle: string }>());
