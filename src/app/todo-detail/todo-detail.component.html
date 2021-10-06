@@ -1,0 +1,17 @@
+<div id="detail">
+  <button [routerLink]="['']" mat-icon-button matTooltip="arrow_back" matTooltipPosition="right" color="primary" aria-label="Return to list todo">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <mat-card *ngIf="selectedTodo">
+    <mat-card-title>{{ selectedTodo.title }}</mat-card-title>
+    <mat-card-content>
+      <p>{{ selectedTodo.description }}</p>
+          <mat-checkbox [checked]="selectedTodo.isClosed" disabled="true">
+            <ng-container *ngIf="selectedTodo.isClosed; then close; else open"></ng-container>
+            <ng-template #open>Open task</ng-template>
+            <ng-template #close>Closed task</ng-template>
+          </mat-checkbox>
+    </mat-card-content>
+  </mat-card>
+  <div *ngIf="!selectedTodo">No data</div>
+</div>

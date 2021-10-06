@@ -1,5 +1,4 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { Todo } from '../models/todo';
 import { featureKey, State } from './reducer';
 
 export const getState = createFeatureSelector<State>(featureKey);

@@ -18,5 +18,5 @@ export class Effects {
     )
   );
 
-  constructor(private actions$: Actions, private todoService: TodoService) {}
+  constructor(private actions$: Actions, private todoService: TodoService) { }
 }

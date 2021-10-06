@@ -7,7 +7,7 @@ import { Actions } from '@ngrx/effects';
 import { todosReducer } from './reducer';
 import { TodoService } from '../services/todo.service';
 import { cold, hot } from 'jasmine-marbles';
-import {loadTodos, loadTodosFailed, loadTodosSuccess} from './actions';
+import { loadTodos, loadTodosFailed, loadTodosSuccess } from './actions';
 import { Todo } from '../models/todo';
 
 describe('Effects', () => {
@@ -33,7 +33,7 @@ describe('Effects', () => {
 
   describe('loadTodos$', () => {
     it('should dispatch loadTodosSuccess action when todoService.list return a result', () => {
-      const mockedTodos: Todo[] = [{ title: 'aTitle', isClosed: true }];
+      const mockedTodos: Todo[] = [{ title: 'aTitle', isClosed: true, description: '' }];
       todoService.list.and.returnValue(of(mockedTodos));
 
       actions = hot('-a-', {

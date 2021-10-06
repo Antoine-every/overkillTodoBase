@@ -20,11 +20,14 @@ import { Effects } from './store/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { MockTodoApi } from './services/mock-todo-api';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { TodoDetailComponent } from './todo-detail/todo-detail.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TodoListComponent
+    TodoListComponent,
+    TodoDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -35,6 +38,10 @@ import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
     MatCardModule,
     MatListModule,
     MatCheckboxModule,
+    // MatInputModule,
+    MatButtonModule,
+    // MatFormFieldModule,
+    // MatTooltipModule,
     FormsModule,
     HttpClientModule,
     HttpClientInMemoryWebApiModule.forRoot(MockTodoApi),
