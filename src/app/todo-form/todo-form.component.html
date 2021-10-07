@@ -1,0 +1,36 @@
+<!-- <form class="example-form">
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>Email</mat-label>
+    <input type="email" matInput [formControl]="titleFormControl" placeholder="Ex. pat@example.com">
+    <mat-error *ngIf="titleFormControl.hasError('email') && !titleFormControl.hasError('required')">
+      Please enter a valid email address
+    </mat-error>
+    <mat-error *ngIf="titleFormControl.hasError('required')">
+      Email is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+</form> -->
+
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)" class="form" novalidate>
+ <mat-form-field class="form-element" appearance="fill">
+    <mat-label>Title</mat-label>
+    <input matInput placeholder="Title" formControlName="title"  />
+    <mat-error *ngIf="!formGroup.controls['title'].valid && formGroup.controls['title'].touched">
+      {{ titleAlert }}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="form-element" appearance="fill">
+    <mat-label>Description</mat-label>
+    <textarea matInput placeholder="Description" formControlName="description"></textarea>
+  </mat-form-field>
+
+  <button mat-stroked-button color="primary" [ngStyle]="{'margin': '1rem 1rem 1rem 0'}" matTooltip="Add of todo" aria-label="Add of todo" id="submit">
+    Add new Todo
+  </button>
+  <button mat-stroked-button type="button" color="warn" [ngStyle]="{'margin': '1rem'}" matTooltip="Cancel" aria-label="Cancel" id="closeNewTodo" (click)="closeNewTodo()" >
+    Cancel
+  </button>
+</form>
+
+

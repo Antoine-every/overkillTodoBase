@@ -41,4 +41,15 @@ describe('TodoService', () => {
 
     req.flush(mockedTodoList);
   });
+
+  it('should create todo', (done: DoneFn) => {
+    const newTodo: Todo = { title: 'todoTitle', isClosed: true, description: '' };
+    service
+      .create(newTodo)
+      .pipe(first())
+      .subscribe((res: Todo) => {
+        expect(res).toEqual(newTodo);
+        done();
+      }, done.fail);
+  });
 });

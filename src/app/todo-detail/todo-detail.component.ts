@@ -21,7 +21,6 @@ export class TodoDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(loadTodos());
     this.route.params.subscribe(params => {
       this.todos$.subscribe(todos => {
         this.selectedTodo = todos.filter(todo => todo.title === params.id)[0];

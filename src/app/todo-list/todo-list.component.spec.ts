@@ -1,7 +1,8 @@
-import { toggleTodoState } from './../store/actions';
+import { Todo } from './../models/todo';
+import { addTodo, toggleTodoState } from './../store/actions';
 import { filteredClosedTodos } from './../store/selectors';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 
 import { TodoListComponent } from './todo-list.component';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -11,8 +12,8 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatList, MatListItem } from '@angular/material/list';
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { MatRippleModule } from '@angular/material/core';
-import { FormsModule } from '@angular/forms';
-import { MockComponents, MockedComponent } from 'ng-mocks';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MockComponents, MockedComponent, ngMocks } from 'ng-mocks';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { MatButton } from '@angular/material/button';
@@ -20,6 +21,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/divider';
+import { TodoFormComponent } from '../todo-form/todo-form.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 
 describe('TodoListComponent', () => {
   let component: TodoListComponent;
@@ -34,6 +37,7 @@ describe('TodoListComponent', () => {
       declarations: [
         TodoListComponent,
         MockComponents(
+          TodoFormComponent,
           MatCheckbox,
           MatListItem,
           MatList,
@@ -42,11 +46,14 @@ describe('TodoListComponent', () => {
           MatButton,
           MatDivider,
           MatIcon,
-          MatCard
+          MatCard,
+          MatFormField,
+          MatLabel,
         ),
       ],
-      imports: [MatRippleModule, FormsModule, RouterTestingModule],
-      providers: [provideMockStore(), {
+      imports: [MatRippleModule, FormsModule, RouterTestingModule, ReactiveFormsModule],
+      providers: [provideMockStore(),
+        FormBuilder, {
         provide: ActivatedRoute,
         useValue: {
           params: of({ id: 'todo 123' })
@@ -111,9 +118,57 @@ describe('TodoListComponent', () => {
     const spyStoreDispatch = spyOn(store, 'dispatch');
     const todoElement = fixture.debugElement.query(By.css('mat-checkbox'));
     todoElement.triggerEventHandler('change', {});
-    const selectedTodo = { todoTitle: 'todo 1', isClosed: false };
+    const selectedTodo = { todoTitle: 'todo 1', isClosed: true };
     expect(spyStoreDispatch).toHaveBeenCalledOnceWith(
       toggleTodoState(selectedTodo)
     );
+  });
+
+  it('should add todo', () => {
+    const spyStoreDispatch = spyOn(store, 'dispatch');
+    const newTodo: Todo = { title: 'todo 3', isClosed: false };
+    component.addTodo(newTodo);
+    expect(spyStoreDispatch).toHaveBeenCalledOnceWith(
+      addTodo({ newTodo })
+    );
+  });
+
+  it('should set viewAdd to true', () => {
+    expect(fixture.debugElement.query(By.css('#todoFormContainer'))).toBeNull();
+    expect(component.viewAddTodo).toBeFalsy();
+    const buttonOpen = fixture.nativeElement.querySelector('#openTodo');
+    buttonOpen.click();
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      expect(component.viewAddTodo).toBeTruthy();
+      expect(fixture.debugElement.query(By.css('#todoFormContainer'))).toBeTruthy();
+      component.closeNewTodo();
+      expect(component.viewAddTodo).toBeFalsy();
+    });
+  });
+
+  it('should close when child emit event', () => {
+    component.viewAddTodo = true;
+    const spyComponent = spyOn(component, 'closeNewTodo');
+
+    fixture.detectChanges();
+
+    ngMocks.trigger(ngMocks.find('app-todo-form'), 'closeCreation');
+
+    expect(spyComponent).toHaveBeenCalled();
+    component.viewAddTodo = false;
+    fixture.detectChanges();
+    expect(component.viewAddTodo).toBeFalsy();
+  });
+
+  it('should addTodo when child emit event', () => {
+    component.viewAddTodo = true;
+    fixture.detectChanges();
+
+    const spyComponent = spyOn(component, 'addTodo');
+    expect((ngMocks.find('app-todo-form'), 'newTodo')).toBeTruthy();
+    ngMocks.trigger(ngMocks.find('app-todo-form'), 'newTodo');
+    expect(spyComponent).toHaveBeenCalled();
   });
 });

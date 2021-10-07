@@ -5,25 +5,34 @@
       <mat-list>
         <ng-container *ngFor="let todo of todos$ | async">
           <mat-list-item *ngIf="!todo.isClosed">
-            <mat-checkbox [checked]="todo.isClosed" (change)="toggleTodo($event.checked, todo.title)">{{ todo.title }}</mat-checkbox>
-            <button [routerLink]="[todo.title]" mat-icon-button matTooltip="arrow_forward" matTooltipPosition="right" color="primary" aria-label="Detail of todo">
+            <mat-checkbox [checked]="todo.isClosed" (change)="toggleTodo(!todo.isClosed, todo.title)">{{ todo.title }}</mat-checkbox>
+            <button [routerLink]="[todo.title]" mat-icon-button matTooltip="Go to detail"  color="primary" aria-label="Detail of todo">
               <mat-icon>arrow_forward</mat-icon>
             </button>
           </mat-list-item>
         </ng-container>
       </mat-list>
+      <button mat-stroked-button [ngStyle]="{'margin-bottom': '1rem'}" *ngIf="!viewAddTodo" color="primary" aria-label="Add of todo" matTooltip="Add of todo" (click)="openNewTodo()" id="openTodo" >
+        Add new Todo
+      </button>
+      <div *ngIf="viewAddTodo" id="todoFormContainer">
+        <mat-divider  *ngIf="(closeTodo$ | async)?.length"></mat-divider>
+        <div [ngStyle]="{'margin': '1rem 1rem 0 1rem'}">
+          <app-todo-form (newTodo)="addTodo($event)" (closeCreation)="closeNewTodo()"></app-todo-form>
+        </div>
+      </div>
       <mat-divider inse *ngIf="(closeTodo$ | async)?.length"></mat-divider>
     </mat-card-content>
 
     <mat-card-content>
     <mat-card-title class="ml-2" *ngIf="(closeTodo$ | async)?.length">Todos closed</mat-card-title>
       <mat-list>
-        <ng-container *ngFor="let todo of todos$ | async">
+        <ng-container *ngFor="let todo of( todos$ | async)?.slice()?.reverse()">
           <mat-list-item *ngIf="todo.isClosed">
-            <mat-checkbox [checked]="todo.isClosed" (change)="toggleTodo($event.checked, todo.title)" class="crossed">
+            <mat-checkbox [checked]="todo.isClosed" (change)="toggleTodo(!todo.isClosed, todo.title)" class="crossed">
               {{ todo.title }}
             </mat-checkbox>
-            <button [routerLink]="[todo.title]" mat-icon-button matTooltip="arrow_forward" matTooltipPosition="right" color="primary" aria-label="Detail of todo">
+            <button [routerLink]="[todo.title]" mat-icon-button matTooltip="Go to detail" matTooltipPosition="right" color="primary" aria-label="Detail of todo">
               <mat-icon>arrow_forward</mat-icon>
             </button>
           </mat-list-item>
